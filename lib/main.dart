@@ -8,7 +8,6 @@ import 'blocs/worker_bloc/worker_bloc.dart'; // Import your BLoC
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());

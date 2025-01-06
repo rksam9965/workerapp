@@ -2,13 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/project_details.dart';
-import '../pages/plot_pages/plot.dart';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/worker_bloc/worker_bloc.dart';
-import '../models/project_details.dart';
 
 class PlotButtons extends StatefulWidget {
   final ProjectDetailsModel? projectDetails; // Assuming `projectDetails` is a model object
@@ -37,12 +30,12 @@ class _PlotButtonsState extends State<PlotButtons> {
       children: List.generate(widget.projectDetails!.data.length, (index) {
         // Assuming `data` is a list of objects and you have a `plotName` field
         String plotName = widget.projectDetails!.data[index].plotName.toString();
-        return _buildCircleButton(index, plotName); // Build each button
+        return circleButton(index, plotName); // Build each button
       }),
     );
   }
 
-  Widget _buildCircleButton(int index, String text) {
+  Widget circleButton(int index, String text) {
     return GestureDetector(
       onTap: () {
         setState(() {

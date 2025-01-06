@@ -8,7 +8,7 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int _currentIndex = 0;
+  int currentIndex = 0;
 
   final List<Widget> _pages = [
     HomePage(),  // Replace with your actual pages
@@ -21,8 +21,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (_currentIndex != 0) {
-          _onTabTapped(0);
+        if (currentIndex != 0) {
+          onTabTapped(0);
           return false;
         } else {
           return true;
@@ -30,7 +30,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       },
       child: SafeArea(
         child: Scaffold(
-          body: _pages[_currentIndex],
+          body: _pages[currentIndex],
           bottomNavigationBar: Container(
             height: 65,
             decoration: const BoxDecoration(
@@ -46,30 +46,30 @@ class _BottomNavigationState extends State<BottomNavigation> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 4,
-                  child: _buildNavItem(
-                    _buildSvgIcon('assets/home.svg', 26, 0),
-                        () => _onTabTapped(0),
+                  child: navItem(
+                    svgIcon('assets/home.svg', 26, 0),
+                        () => onTabTapped(0),
                   ),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 4,
-                  child: _buildNavItem(
-                    _buildSvgIcon('assets/plus.svg', 26, 1),
-                        () => _onTabTapped(1),
+                  child: navItem(
+                    svgIcon('assets/plus.svg', 26, 1),
+                        () => onTabTapped(1),
                   ),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 4,
-                  child: _buildNavItem(
-                    _buildSvgIcon('assets/message.svg', 26, 2),
-                        () => _onTabTapped(2),
+                  child: navItem(
+                    svgIcon('assets/message.svg', 26, 2),
+                        () => onTabTapped(2),
                   ),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width / 4,
-                  child: _buildNavItem(
-                    _buildSvgIcon('assets/person.svg', 26, 3),
-                        () => _onTabTapped(3),
+                  child: navItem(
+                    svgIcon('assets/person.svg', 26, 3),
+                        () => onTabTapped(3),
                   ),
                 ),
               ],
@@ -81,16 +81,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
   }
 
   // Helper method to build SVG icons with active color logic based on index
-  Widget _buildSvgIcon(String assetPath, double size, int pageIndex) {
+  Widget svgIcon(String assetPath, double size, int pageIndex) {
     return SvgPicture.asset(
       assetPath,
       width: size,
       height: size,
-      color: _currentIndex == pageIndex ? Colors.white : Colors.grey,
+      color: currentIndex == pageIndex ? Colors.white : Colors.grey,
     );
   }
 
-  Widget _buildNavItem(Widget icon, Function() onTap) {
+  Widget navItem(Widget icon, Function() onTap) {
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -107,9 +107,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
     );
   }
 
-  void _onTabTapped(int index) {
+  void onTabTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      currentIndex = index;
     });
   }
 }

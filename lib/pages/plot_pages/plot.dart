@@ -23,107 +23,94 @@ class PlotScreen extends StatefulWidget {
 }
 
 class _PlotScreenState extends State<PlotScreen> {
-  WorkerBloc? pillBloc;
-  WorkerBloc? projectBloc;
-  WorkerBloc? getDataPlot;
+  late WorkerBloc pillBloc;
+  late WorkerBloc projectBloc;
+  late WorkerBloc getDataPlot;
   bool transist = false;
-  bool isLoading = true;
 
   @override
   void initState() {
+    super.initState();
+
     pillBloc = WorkerBloc();
     projectBloc = WorkerBloc();
     getDataPlot = WorkerBloc();
 
     final projectId = int.tryParse(widget.projectId ?? '0') ?? 0;
-    pillBloc!.add(GetAllPill(projectId));
-    projectBloc!.add(GetProjectDetails(projectId));
-
-    // Set isLoading to false once the data is fetched
-    Future.delayed(Duration(milliseconds: 0), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
-
-    super.initState();
+    pillBloc.add(GetAllPill(projectId));
+    projectBloc.add(GetProjectDetails(projectId));
   }
 
   @override
   void dispose() {
-    pillBloc?.close();
-    projectBloc?.close();
-    getDataPlot?.close();
+    pillBloc.close();
+    projectBloc.close();
+    getDataPlot.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFF1F4),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider.value(value: pillBloc!),
-          BlocProvider.value(value: projectBloc!),
-        ],
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  header(screenHeight),
-                  const SizedBox(height: 50),
-                  transist
-                      ? BlocBuilder<WorkerBloc, WorkerState>(
-                    bloc: getDataPlot!,
-                    builder: (context, state) {
-                      if (state is WorkerLoadingAllPills) {
-                        return Center(child: Loading("Loading Pills..."));
-                      } else if (state is WorkerDetailPlotLoaded) {
-                        return PlotsCard(
-                          pileList2: state.plotView,
-                          transist: transist,
-                        );
-                      } else if (state is WorkerError) {
-                        return Center(child: Error(state.message ?? 'Error'));
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  )
-                      : BlocBuilder<WorkerBloc, WorkerState>(
-                    bloc: pillBloc!,
-                    builder: (context, state) {
-                      if (state is WorkerLoadingAllPills) {
-                        return Center(child: Loading("Loading Pills..."));
-                      } else if (state is GetAllView) {
-                        return PlotsCard(
-                          pileList: state.pileData,
-                          transist: transist,
-                        );
-                      } else if (state is WorkerError) {
-                        return Center(child: Error(state.message ?? 'Error'));
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  _buildBottomButtons(),
-                ],
-              ),
-            ),
-            HorizontalPlots(screenHeight),
-
-            // Display loading indicator in the center of the screen
-            if (isLoading)
-              Center(
-                child: CircularProgressIndicator(),
-              ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFFF1F4),
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: pillBloc),
+            BlocProvider.value(value: projectBloc),
           ],
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    header(screenHeight),
+                    const SizedBox(height: 50),
+                    transist
+                        ? BlocBuilder<WorkerBloc, WorkerState>(
+                      bloc: getDataPlot,
+                      builder: (context, state) {
+                        if (state is WorkerLoadingAllPills) {
+                          return Loading("Loading Pills...");
+                        } else if (state is WorkerDetailPlotLoaded) {
+                          return PlotsCard(
+                            pileList2: state.plotView,
+                            transist: transist,
+                          );
+                        } else if (state is WorkerError) {
+                          return Error(state.message ?? 'Error');
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    )
+                        : BlocBuilder<WorkerBloc, WorkerState>(
+                      bloc: pillBloc,
+                      builder: (context, state) {
+                        if (state is WorkerLoadingAllPills) {
+                          return Loading("Loading Pills...");
+                        } else if (state is GetAllView) {
+                          return PlotsCard(
+                            pileList: state.pileData,
+                            transist: transist,
+                          );
+                        } else if (state is WorkerError) {
+                          return Error(state.message ?? 'Error');
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _buildBottomButtons(),
+                  ],
+                ),
+              ),
+              HorizontalPlots(screenHeight),
+            ],
+          ),
         ),
       ),
     );
@@ -155,21 +142,12 @@ class _PlotScreenState extends State<PlotScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      ),
+                      onTap: () => Navigator.pop(context, true),
+                      child: const Icon(Icons.arrow_back_ios, color: Colors.white),
                     ),
                     const Text(
                       'PLOTS',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     const SizedBox(width: 30),
                   ],
@@ -215,11 +193,7 @@ class _PlotScreenState extends State<PlotScreen> {
         ),
         child: Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -227,25 +201,13 @@ class _PlotScreenState extends State<PlotScreen> {
 
   Widget Loading(String message) {
     return Center(
-      child: Text(
-        message,
-        style: const TextStyle(
-          color: Colors.grey,
-          fontSize: 16,
-        ),
-      ),
+      child: Text(message, style: const TextStyle(color: Colors.grey, fontSize: 16)),
     );
   }
 
   Widget Error(String message) {
     return Center(
-      child: Text(
-        message,
-        style: const TextStyle(
-          color: Colors.red,
-          fontSize: 16,
-        ),
-      ),
+      child: Text(message, style: const TextStyle(color: Colors.red, fontSize: 16)),
     );
   }
 
@@ -256,25 +218,18 @@ class _PlotScreenState extends State<PlotScreen> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            SizedBox(
-              width: 7,
-            ),
+            const SizedBox(width: 7),
             BlocBuilder<WorkerBloc, WorkerState>(
-              bloc: projectBloc!,
+              bloc: projectBloc,
               builder: (context, state) {
                 if (state is WorkerLoadingProjectDetails) {
-                  return Center(child: Loading(""));
+                  return Loading("");
                 } else if (state is WorkerDetailLoaded) {
                   return PlotButtons(
                     projectDetails: state.projectDetails,
                     onPlotSelected: (projectId, plotId) {
-                      setState(() {
-                        transist = true;
-                      });
-                      getDataPlot!.add(GetByPlot(
-                        int.parse(projectId),
-                        int.parse(plotId),
-                      ));
+                      setState(() => transist = true);
+                      getDataPlot.add(GetByPlot(int.parse(projectId), int.parse(plotId)));
                     },
                   );
                 } else if (state is WorkerError) {

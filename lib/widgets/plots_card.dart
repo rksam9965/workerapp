@@ -27,7 +27,7 @@ class PlotsCard extends StatelessWidget {
       }
 
       List<Widget> pileWidgets = pileList2!.data!.map((pile) {
-        return _buildPileCard(pile, screenWidth);
+        return pileCard(pile, screenWidth);
       }).toList();
 
       return Column(
@@ -44,7 +44,7 @@ class PlotsCard extends StatelessWidget {
       }
 
       List<Widget> pileWidgets = pileList!.data.map((pile) {
-        return _buildPileCard(pile, screenWidth);
+        return pileCard(pile, screenWidth);
       }).toList();
 
       return Column(
@@ -53,7 +53,7 @@ class PlotsCard extends StatelessWidget {
     }
   }
 
-  Widget _buildPileCard(dynamic pile, double screenWidth) {
+  Widget pileCard(dynamic pile, double screenWidth) {
     return Row(
       children: [
         SizedBox(

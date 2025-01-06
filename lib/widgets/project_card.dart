@@ -1,66 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../pages/plot_pages/plot.dart';
-
-class ProjectCard extends StatefulWidget {
+class ProjectCard extends StatelessWidget {
   final String projectId;
   final String tenderNumber;
   final String projectName;
   final String projectAddress;
   final String assignedWorkers;
+  final Function(String id)? navigatorToScreen;
 
   const ProjectCard({
+    Key? key,
     required this.projectId,
     required this.tenderNumber,
     required this.projectName,
     required this.projectAddress,
     required this.assignedWorkers,
-  });
-
-  @override
-  _ProjectCardState createState() => _ProjectCardState();
-}
-
-class _ProjectCardState extends State<ProjectCard> {
-  // Example state: You can track things like whether the card is selected or not
-  bool isSelected = false;
+    this.navigatorToScreen,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
-        setState(() {
-          isSelected = !isSelected; // Toggle the selection state
-        });
-
-        // Avoid large transition jumps by adding a delay for smoother navigation
-        Future.delayed(Duration(milliseconds: 2), () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PlotScreen(
-                projectId: widget.projectId, // Pass the projectId to the PlotScreen
-              ),
-            ),
-          );
-        });
+        if (navigatorToScreen != null) {
+          navigatorToScreen!(projectId); // Trigger navigation with projectId
+        }
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8), // Smooth rounding of the card
         child: Container(
-          color: Colors.white, // Change color when selected
-          margin: EdgeInsets.all(10.0),
+          color: Colors.white,
+          margin: const EdgeInsets.all(10.0),
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildRow('Project ID', widget.projectId),
-                _buildRow('Tender Number', widget.tenderNumber),
-                _buildRow('Project Name', widget.projectName),
-                _buildRow('Project Address', widget.projectAddress),
-                _buildRow('Assigned Workers', widget.assignedWorkers),
+                row('Project ID', projectId),
+                row('Tender Number', tenderNumber),
+                row('Project Name', projectName),
+                row('Project Address', projectAddress),
+                row('Assigned Workers', assignedWorkers),
               ],
             ),
           ),
@@ -69,7 +50,7 @@ class _ProjectCardState extends State<ProjectCard> {
     );
   }
 
-  Widget _buildRow(String label, String value) {
+  Widget row(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -77,13 +58,13 @@ class _ProjectCardState extends State<ProjectCard> {
         children: [
           Text(
             '$label:',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             width: 100,
             child: Text(
               value,
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
               maxLines: 1,
               overflow: TextOverflow.ellipsis, // Handles long text properly
             ),

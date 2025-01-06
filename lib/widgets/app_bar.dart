@@ -18,6 +18,4 @@ class AppBarTop extends StatelessWidget {
       ),
     );
   }
-
-
 }

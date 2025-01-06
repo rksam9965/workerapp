@@ -12,7 +12,7 @@ part 'worker_event.dart';
 part 'worker_state.dart';
 
 class WorkerBloc extends Bloc<WorkerEvent, WorkerState> {
-  final ApiRepository _apiRepository = ApiRepository();
+  final ApiRepository apiRepository = ApiRepository();
 
 
 
@@ -22,7 +22,7 @@ class WorkerBloc extends Bloc<WorkerEvent, WorkerState> {
     on<GetProjectList>((event, emit) async {
       try {
         emit(WorkerLoadingProjectDetails());
-        final projectList = await _apiRepository.fetchProjectList(query: event.query);  // Fetch the list of projects
+        final projectList = await apiRepository.fetchProjectList(query: event.query);  // Fetch the list of projects
         emit(WorkerLoaded(projectList));
       } catch (error, stackTrace) {
         // Print detailed error and stack trace for debugging
@@ -40,7 +40,7 @@ class WorkerBloc extends Bloc<WorkerEvent, WorkerState> {
     on<GetAllPill>((event, emit) async {
       try {
         emit(WorkerLoadingAllPills());
-        final getAllData = await _apiRepository.getPileAllData(projectId: event.projectId);
+        final getAllData = await apiRepository.getPileAllData(projectId: event.projectId);
 
         emit(GetAllView(getAllData));
       } catch (error, stackTrace) {
@@ -60,7 +60,7 @@ class WorkerBloc extends Bloc<WorkerEvent, WorkerState> {
     on<GetProjectDetails>((event, emit) async {
       try {
         emit(WorkerLoadingProjectDetails());
-        final projectDetails = await _apiRepository.viewPlot(projectId: event.projectId);
+        final projectDetails = await apiRepository.viewPlot(projectId: event.projectId);
         emit(WorkerDetailLoaded(projectDetails));
       } catch (error) {
         emit(WorkerError("Failed to fetch project details"));
@@ -71,7 +71,7 @@ class WorkerBloc extends Bloc<WorkerEvent, WorkerState> {
     on<GetByPlot>((event, emit) async {
       try {
         emit(WorkerLoadingProjectDetails());
-        final plotByView = await _apiRepository.getPlotByView(projectId: event.projectId,plotId: event.plotId);  // Fetch project details
+        final plotByView = await apiRepository.getPlotByView(projectId: event.projectId,plotId: event.plotId);  // Fetch project details
         emit(WorkerDetailPlotLoaded(plotByView));
       } catch (error) {
         emit(WorkerError("Failed to fetch project details. Is your device online?"));

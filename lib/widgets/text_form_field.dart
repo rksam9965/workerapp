@@ -16,13 +16,13 @@ class SearchTextFormField extends StatefulWidget {
 }
 
 class _SearchTextFormFieldState extends State<SearchTextFormField> {
-  late WorkerBloc _newsBloc;
+  late WorkerBloc newsBloc;
 
   @override
   void initState() {
     super.initState();
-    _newsBloc = BlocProvider.of<WorkerBloc>(context); // Get the bloc from context
-    _newsBloc.add(GetProjectList()); // Initial fetch when the page loads
+    newsBloc = BlocProvider.of<WorkerBloc>(context); // Get the bloc from context
+    newsBloc.add(GetProjectList()); // Initial fetch when the page loads
   }
 
   @override
@@ -58,9 +58,9 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
 
   searchCovid(String? query) {
     if (query!.isNotEmpty) {
-      _newsBloc.add(GetProjectList(query: query)); // Trigger search event with query
+      newsBloc.add(GetProjectList(query: query)); // Trigger search event with query
     } else {
-      _newsBloc.add(GetProjectList()); // Fetch the complete list if query is empty
+      newsBloc.add(GetProjectList()); // Fetch the complete list if query is empty
     }
   }
 }

@@ -7,13 +7,13 @@ import 'network.dart';
 
 class ApiProvider {
   final Dio _dio = Dio();
-  final String _baseUrl = 'http://153.92.222.134:8088/workerapp';
+  final String baseUrl = 'http://153.92.222.134:8088/workerapp';
 
   Future<ProjectModel> fetchDataList({String? query}) async {
     try {
       final String url = query != null
-          ? '$_baseUrl/project_list?userid=$query'
-          : '$_baseUrl/project_list?userid=1';
+          ? '$baseUrl/project_list?userid=$query'
+          : '$baseUrl/project_list?userid=1';
 
       // Print the URL
       print("API Call: $url");
@@ -27,7 +27,7 @@ class ApiProvider {
 
   Future<ProjectDetailsModel> fetchProjectDetails({int? projectId, String? userId}) async {
     try {
-      final String url = '$_baseUrl/viewplot_details?userid=${userId ?? "1"}&project_id=$projectId';
+      final String url = '$baseUrl/viewplot_details?userid=${userId ?? "1"}&project_id=$projectId';
 
       // Print the URL
       print("API Call: $url");
@@ -41,7 +41,7 @@ class ApiProvider {
 
   Future<PlotResponse> viewPlot({int? projectId, String? userId, int? plotId}) async {
     try {
-      final String url = '$_baseUrl/view_pile_by_plots?userid=${userId ?? "1"}&project_id=$projectId&plot_id=$plotId';
+      final String url = '$baseUrl/view_pile_by_plots?userid=${userId ?? "1"}&project_id=$projectId&plot_id=$plotId';
 
       // Print the URL
       print("API Call: $url");
@@ -56,7 +56,7 @@ class ApiProvider {
 
   Future<PileData> viewAllPiles({int? projectId, String? userId}) async {
     try {
-      final String url = '$_baseUrl/view_allpile_by_project?userid=${userId ?? 1}&project_id=$projectId';
+      final String url = '$baseUrl/view_allpile_by_project?userid=${userId ?? 1}&project_id=$projectId';
 
       // Print the URL
       print("API Call: $url");
